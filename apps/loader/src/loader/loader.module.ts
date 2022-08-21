@@ -1,18 +1,17 @@
 import { Module } from '@nestjs/common';
 import {
-  MongoModule,
-  VehicleMessage,
-  VehicleMessageSchema,
+  FailedMessageModule,
+  VehicleMessageModule,
 } from '@vehicle-observer/shared';
+import { WsModule } from '../ws/ws.module';
 
 import { LoaderController } from './loader.controller';
+import { LoaderService } from './loader.service';
 
 @Module({
-  imports: [
-    MongoModule.forFeature([
-      { name: VehicleMessage.name, schema: VehicleMessageSchema },
-    ]),
-  ],
+  imports: [VehicleMessageModule, FailedMessageModule, WsModule],
   controllers: [LoaderController],
+  providers: [LoaderService],
+  exports: [LoaderService],
 })
 export class LoaderModule {}

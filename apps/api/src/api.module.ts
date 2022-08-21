@@ -1,10 +1,25 @@
 import { Module } from '@nestjs/common';
-import { ApiController } from './api.controller';
-import { ApiService } from './api.service';
+import {
+  Application,
+  ConfigModule,
+  Environment,
+  HealthCheckModule,
+  HealthCheckType,
+  MongoModule,
+} from '@vehicle-observer/shared';
+
+import { VehicleModule } from './vehicle/vehicle.module';
 
 @Module({
-  imports: [],
-  controllers: [ApiController],
-  providers: [ApiService],
+  imports: [
+    HealthCheckModule.forRootAsync(HealthCheckType.API),
+    VehicleModule,
+    ConfigModule.registerAsync({
+      type: Application.API,
+      env: Environment.DEV,
+    }),
+    MongoModule.registerAsync({}),
+  ],
+  controllers: [],
 })
 export class ApiModule {}

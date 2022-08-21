@@ -9,6 +9,7 @@ import {
 } from '@vehicle-observer/shared';
 
 import { LoaderModule } from './loader/loader.module';
+import { WsModule } from './ws/ws.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { LoaderModule } from './loader/loader.module';
     MongoModule.registerAsync({}),
     HealthCheckModule.forRootAsync(HealthCheckType.MICROSERVICE),
     LoaderModule,
+    WsModule,
   ],
 })
 export class AppModule {}

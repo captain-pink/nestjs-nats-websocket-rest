@@ -1,5 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { NestApplication, NestFactory } from '@nestjs/core';
+import { WsAdapter } from '@nestjs/platform-ws';
 import { MicroserviceOptions } from '@nestjs/microservices';
 import { INJECTION_TOKEN_CONFIG } from '@vehicle-observer/shared';
 
@@ -19,13 +20,18 @@ async function bootstrap() {
     protocol,
     transport,
   });
-  console.log(loaderOptions.asMicroserviceOptions());
+
   app.connectMicroservice<MicroserviceOptions>(
     loaderOptions.asMicroserviceOptions(),
   );
 
+  app.useWebSocketAdapter(new WsAdapter());
+
   await app.startAllMicroservices();
-  await app.listen(3000);
+
+  const { port: ws_port } = config.ws;
+
+  await app.listen(ws_port);
 }
 
 bootstrap();

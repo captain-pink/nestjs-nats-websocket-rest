@@ -22,9 +22,6 @@ export class MongoModule {
     models?: ModelDefinition[],
     connectionName?: string,
   ): DynamicModule {
-    return {
-      module: MongoModule,
-      imports: [MongooseModule.forFeature(models, connectionName)],
-    };
+    return MongooseModule.forFeature(models, connectionName);
   }
 }

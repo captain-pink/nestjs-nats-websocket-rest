@@ -18,6 +18,7 @@ export type MongoConfig = {
   host: string;
   port: string;
   db: string;
+  protocol: string;
 };
 
 export type LoaderConfig = {
@@ -32,6 +33,7 @@ export type ApiConfig = {
   name: string;
   host: string;
   port: number;
+  protocol: string;
 };
 
 export interface CommonConfig {

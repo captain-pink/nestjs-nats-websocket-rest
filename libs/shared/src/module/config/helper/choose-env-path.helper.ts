@@ -1,4 +1,5 @@
 import { join, resolve } from 'path';
+import { isNil } from 'ramda';
 
 import { Application, Environment } from '../enum';
 
@@ -10,6 +11,10 @@ import { Application, Environment } from '../enum';
  * @returns path to file as string
  */
 export function chooseEnvPath(type: Application, env: Environment): string {
+  if (isNil(type) || isNil(env)) {
+    throw new Error('No type or env was passed');
+  }
+
   const application = Application[type].toLowerCase();
   const environment = Environment[env].toLowerCase();
 

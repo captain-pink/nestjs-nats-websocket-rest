@@ -4,6 +4,7 @@ export enum MongoVariables {
   HOST,
   PORT,
   DB,
+  PROTOCOL,
 }
 
 export enum NatsVariables {
@@ -11,5 +12,16 @@ export enum NatsVariables {
   NAME,
   PORT,
   TRANSPORT,
+  PROTOCOL,
+}
+
+export enum WsVariables {
+  PORT,
+}
+
+export enum ApiVariables {
+  PORT,
+  NAME,
+  HOST,
   PROTOCOL,
 }

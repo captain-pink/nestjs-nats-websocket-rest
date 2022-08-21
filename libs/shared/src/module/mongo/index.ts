@@ -1,3 +1,3 @@
 export * from './mongo.module';
 export * from './type';
-export * from './schema';
+export * from './module';

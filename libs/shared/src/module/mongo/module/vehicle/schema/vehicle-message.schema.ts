@@ -6,6 +6,12 @@ export type VehicleMessageDocument = VehicleMessage & Document;
 @Schema()
 export class VehicleMessage {
   @Prop()
+  primaryChannel: string;
+
+  @Prop()
+  uniqueChannel: string;
+
+  @Prop()
   time: Date;
 
   @Prop()

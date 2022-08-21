@@ -1,6 +1,12 @@
 import { registerAs } from '@nestjs/config';
 
-import { Application, MongoVariables, NatsVariables } from '../enum';
+import {
+  ApiVariables,
+  Application,
+  MongoVariables,
+  NatsVariables,
+  WsVariables,
+} from '../enum';
 import { VariablePrefix } from '../enum/variable-prefix.enum';
 import { INJECTION_TOKEN_CONFIG } from '../token';
 import { makeEnumAsVariablesParser } from '../../../util/make-enum-as-variables.util';
@@ -20,7 +26,11 @@ export function makeConfigFactory(type: Application) {
     }
 
     if (type === Application.LOADER) {
-      return { ...commonVariables, loader: parseLoaderConfig() };
+      return {
+        ...commonVariables,
+        loader: parseLoaderConfig(),
+        ws: parseWsConfig(),
+      };
     }
 
     return commonVariables;
@@ -35,12 +45,22 @@ function parseMongoVariables() {
 }
 
 function parseLoaderConfig() {
-  const mongoPrefix = VariablePrefix[VariablePrefix.NATS];
-  const enumAsVariablesParser = makeEnumAsVariablesParser(mongoPrefix);
+  const natsPrefix = VariablePrefix[VariablePrefix.NATS];
+  const enumAsVariablesParser = makeEnumAsVariablesParser(natsPrefix);
 
   return enumAsVariablesParser(NatsVariables);
 }
 
+function parseWsConfig() {
+  const wsPrefix = VariablePrefix[VariablePrefix.WS];
+  const enumAsVariablesParser = makeEnumAsVariablesParser(wsPrefix);
+
+  return enumAsVariablesParser(WsVariables);
+}
+
 function parseApiConfig() {
-  return {};
+  const apiPrefix = VariablePrefix[VariablePrefix.API];
+  const enumAsVariablesParser = makeEnumAsVariablesParser(apiPrefix);
+
+  return enumAsVariablesParser(ApiVariables);
 }

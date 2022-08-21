@@ -5,7 +5,7 @@ import {
   HttpHealthIndicator,
   MicroserviceHealthIndicator,
 } from '@nestjs/terminus';
-import { ApiConfig, INJECTION_TOKEN_CONFIG, LoaderConfig } from '../config';
+import { CommonConfig, INJECTION_TOKEN_CONFIG, LoaderConfig } from '../config';
 
 import { HealthCheckType } from './enum';
 import { HealthCheckServiceInterface } from './type';
@@ -59,21 +59,26 @@ export class MicroserviceHealthCheckService
 
 @Injectable()
 class HttpHealthCheckService implements HealthCheckServiceInterface {
-  private readonly config: ApiConfig;
+  private readonly config: CommonConfig;
 
   constructor(
     private readonly configService: ConfigService,
     private readonly http: HttpHealthIndicator,
     private readonly healthCheckService: HealthCheckService,
   ) {
-    this.config = configService.get(INJECTION_TOKEN_CONFIG).api as ApiConfig;
+    this.config = this.configService.get(
+      INJECTION_TOKEN_CONFIG,
+    ) as CommonConfig;
   }
 
   check() {
-    const { name, host, port } = this.config;
+    const {
+      api: { name },
+      mongo: { host, port, protocol },
+    } = this.config;
 
     return this.healthCheckService.check([
-      () => this.http.pingCheck(name, `${host}:${port}`),
+      () => this.http.pingCheck(name, `${protocol}://${host}:${port}`),
     ]);
   }
 }

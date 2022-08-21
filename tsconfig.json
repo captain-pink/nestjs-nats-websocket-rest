@@ -17,13 +17,11 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "paths": {
-      "@vehicle-observer/shared": [
-        "libs/shared/src"
-      ],
-      "@vehicle-observer/shared/*": [
-        "libs/shared/src/*"
-      ]
+      "@vehicle-observer/shared": ["libs/shared/src"],
+      "@vehicle-observer/shared/*": ["libs/shared/src/*"]
     }
   }
 }
