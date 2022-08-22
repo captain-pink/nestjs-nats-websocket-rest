@@ -10,7 +10,10 @@ import { makeMongooseModule } from './helper';
 @Module({})
 export class MongoModule {
   static registerAsync(mongooseOptions: MongooseModuleOptions): DynamicModule {
-    const mongooseModule = makeMongooseModule(mongooseOptions);
+    const mongooseModule = makeMongooseModule({
+      useUnifiedTopology: true,
+      ...mongooseOptions,
+    });
 
     return {
       module: MongoModule,

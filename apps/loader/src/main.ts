@@ -2,10 +2,12 @@ import { ConfigService } from '@nestjs/config';
 import { NestApplication, NestFactory } from '@nestjs/core';
 import { WsAdapter } from '@nestjs/platform-ws';
 import { MicroserviceOptions } from '@nestjs/microservices';
-import { INJECTION_TOKEN_CONFIG } from '@vehicle-observer/shared';
+import {
+  INJECTION_TOKEN_CONFIG,
+  LoaderOptions,
+} from '@vehicle-observer/shared';
 
 import { AppModule } from './app.module';
-import { LoaderOptions } from './nats/model';
 
 async function bootstrap() {
   const app: NestApplication = await NestFactory.create(AppModule);

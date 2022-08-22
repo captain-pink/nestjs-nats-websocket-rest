@@ -3,7 +3,7 @@ import { toInt } from '@vehicle-observer/shared';
 
 type LoaderOptionsConstructor = {
   protocol: string;
-  transport: number;
+  transport: string;
   host: string;
   port: number;
 };

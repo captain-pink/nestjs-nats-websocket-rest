@@ -1,11 +1,17 @@
-import { Injectable, Type } from '@nestjs/common';
+import { Injectable, Logger, Type } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   HealthCheckService,
   HttpHealthIndicator,
   MicroserviceHealthIndicator,
+  MicroserviceHealthIndicatorOptions,
 } from '@nestjs/terminus';
-import { CommonConfig, INJECTION_TOKEN_CONFIG, LoaderConfig } from '../config';
+import {
+  CommonConfig,
+  INJECTION_TOKEN_CONFIG,
+  LoaderConfig,
+  LoaderOptions,
+} from '../config';
 
 import { HealthCheckType } from './enum';
 import { HealthCheckServiceInterface } from './type';
@@ -33,6 +39,7 @@ export function chooseHealthCheckServiceStrategy(
 export class MicroserviceHealthCheckService
   implements HealthCheckServiceInterface
 {
+  private readonly logger = new Logger(MicroserviceHealthCheckService.name);
   private readonly config: LoaderConfig;
 
   constructor(
@@ -45,20 +52,25 @@ export class MicroserviceHealthCheckService
   }
 
   check() {
-    const { name, ...options } = this.config;
+    const { name, port, host, protocol, transport } = this.config;
+    const loaderOptions = new LoaderOptions({
+      port,
+      host,
+      protocol,
+      transport,
+    }).asMicroserviceOptions() as MicroserviceHealthIndicatorOptions;
+
+    this.logger.log(`Health check: ${name}, ${JSON.stringify(loaderOptions)}`);
 
     return this.healthCheckService.check([
-      () =>
-        this.http.pingCheck(name, {
-          ...options,
-          transport: parseInt(options.transport, 10),
-        }),
+      () => this.http.pingCheck(name, loaderOptions),
     ]);
   }
 }
 
 @Injectable()
 class HttpHealthCheckService implements HealthCheckServiceInterface {
+  private readonly logger = new Logger(HttpHealthCheckService.name);
   private readonly config: CommonConfig;
 
   constructor(
@@ -76,6 +88,8 @@ class HttpHealthCheckService implements HealthCheckServiceInterface {
       api: { name },
       mongo: { host, port, protocol },
     } = this.config;
+
+    this.logger.log(`Health check: ${name}, ${host}, ${port}, ${protocol}`);
 
     return this.healthCheckService.check([
       () => this.http.pingCheck(name, `${protocol}://${host}:${port}`),

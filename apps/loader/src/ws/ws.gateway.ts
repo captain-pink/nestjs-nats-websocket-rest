@@ -29,12 +29,6 @@ export class WsGateway
   }
 
   /**
-   * TODO: Hook logic to add
-   * @param server ws server
-   */
-  afterInit(server: Server) {}
-
-  /**
    * TODO: Rewrite logic to reduce time complexity
    * @param client Ws client
    */

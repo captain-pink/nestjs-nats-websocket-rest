@@ -1,0 +1,7 @@
+# TODO:
+# proper directories should be moved instead of everything
+FROM node:16
+WORKDIR /usr/app
+COPY package*.json ./
+RUN npm install
+COPY . .

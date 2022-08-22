@@ -1,14 +1,8 @@
-import {
-  HttpException,
-  Injectable,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, MongooseError } from 'mongoose';
-import { pick } from 'ramda';
-import { FindVehicleMessageDto, VehicleMessageDto } from './dto';
+import { Model } from 'mongoose';
 
+import { FindVehicleMessageDto, VehicleMessageDto } from './dto';
 import { VehicleMessage, VehicleMessageDocument } from './schema';
 
 @Injectable()

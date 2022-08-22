@@ -1,6 +1,64 @@
-version: '3.1'
+version: '3.9'
+
+networks:
+  isolation-network:
+    driver: bridge
 
 services:
+  nats_server:
+    restart: always
+    image: 'bitnami/nats:latest'
+    ports:
+      - 4222:4222
+      - 6222:6222
+      - 8222:8222
+    networks:
+      - isolation-network
+
+  api:
+    restart: always
+    build:
+      context: .
+      dockerfile: .docker/dockerfile.api
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    command: npm run start api
+    env_file:
+      - .env/.dev.api
+      - .env/.dev.common
+    environment:
+      MONGO_HOST: mongo
+    depends_on:
+      - mongo
+    ports:
+      - 3001:3001
+    networks:
+      - isolation-network
+    
+  loader:
+    restart: always
+    build:
+      context: .
+      dockerfile: .docker/dockerfile.loader
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    command: npm run start loader
+    env_file:
+      - .env/.dev.loader
+      - .env/.dev.common
+    environment:
+      MONGO_HOST: mongo
+      NATS_HOST: nats_server
+    depends_on:
+      - mongo
+      - nats_server
+    ports:
+      - 3000:3000
+      - 1000:1000
+    networks:
+      - isolation-network
 
   mongo:
     image: mongo
@@ -10,9 +68,11 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      - isolation-network
 
   mongo-express:
-    image: mongo-express
+    image: mongo-express:0.49
     restart: always
     ports:
       - 8081:8081
@@ -20,3 +80,5 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+    networks:
+      - isolation-network

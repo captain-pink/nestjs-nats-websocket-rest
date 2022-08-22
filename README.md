@@ -2,7 +2,7 @@
 
 ## Description
 
-Current repository shows how technical task "ViriCiti Nodejs Assignment" can be solved in elegant and extensible way using NestJs framework and Node. Monorepo concept applied as well to prevent of using different node_modules folders and to simplify project building.
+Current repository shows how technical task "ViriCiti Nodejs Assignment" can be solved in elegant and extensible way using Node and NestJs framework. Monorepo concept applied as well to prevent of using different node_modules folders and to simplify project building process.
 
 ## Stack
 - Nodejs 16+;
@@ -33,12 +33,31 @@ Because of "solid" project structure which was established from scratch, there a
 
 Of course, coverage is very low, but any tests can be written by request (unit, intergration). The reason of such coverage is a lack of time.
 
+## Usage
+1. clone the repository
+2. Create .env folder and plase env files there (check .env.example)
+3. Install Docker & Docker-compose
+4. Navigate to root folder
+5. Run docker-compose up -d
+6. Check /health endpoint of services
+7. Publish messages to nats with subject "vehicle.*"
+
+## API
+- /health endpoint accessible for both - loader and api service.
+- /vehicles, /vehicles/:id endpoints - api service
+
+## Websocket
+- connect to 1000 port and check messages
+
 ## How do I see the future of this project (If we suppose that this one is live)
 
+- Extend unit tests converage at least up to 75-80%;
+- Accelerate docker build (adjust configuration);
 - To add some lib for security checks (e.g. snyk)
 - To add husky hooks (e.g. linter/prettier - precommit, tests/security - prepush)
 - To set up monitoring with some tool (e.g. AWS cloud watch + Kinesis + New Relic/graphana/kibana);
 - To set up alerting (tool dependent);
+- Optimise Docker build for different envs (remove all dev deps for prod, etc);
 - Implement module for custom metrics collection (tool dependent);
 - Would be nice to implement custom logger service (NestJS uses console under the hood, pino or winston better);
 - Secrets to store on cloud (e.g. AWS secret manager);
