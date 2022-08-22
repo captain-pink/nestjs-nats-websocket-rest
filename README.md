@@ -1,7 +1,6 @@
 # VEHICLE-OBSERVER
 
 ## Description
-
 Current repository shows how technical task "ViriCiti Nodejs Assignment" can be solved in elegant and extensible way using Node and NestJs framework. Monorepo concept applied as well to prevent of using different node_modules folders and to simplify project building process.
 
 ## Stack
@@ -14,7 +13,6 @@ Current repository shows how technical task "ViriCiti Nodejs Assignment" can be 
 - Docker & Docker-compose;
 
 ## Structure
-
 Project consist of 2 apps and 1 library.
 
 ### Library
@@ -26,7 +24,6 @@ Project consist of 2 apps and 1 library.
 - Api - simple rest api application to get data from mongo
 
 ### Testing
-
 Because of "solid" project structure which was established from scratch, there are lack of unit tests, but examples can be find here:
 - apps/api/src/vehicle/_test (shows example of controller's unit testing)
 - libs/config/_test (helper tested)
@@ -46,11 +43,14 @@ Of course, coverage is very low, but any tests can be written by request (unit, 
 - /health endpoint accessible for both - loader and api service.
 - /vehicles, /vehicles/:id endpoints - api service
 
-## Websocket
-- connect to 1000 port and check messages
+## Websocket API
+Sends two types of messages: VEHICLES, FAILED. Exposed on port 1000
+
+## Telegram bot api consummer
+In order to implement fast alerting, messenger APIs can be used. To play with it, one more repository was created (https://github.com/captain-pink/rust-telegram-api-consumer).
+
 
 ## How do I see the future of this project (If we suppose that this one is live)
-
 - Extend unit tests converage at least up to 75-80%;
 - Accelerate docker build (adjust configuration);
 - To add some lib for security checks (e.g. snyk)
