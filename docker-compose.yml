@@ -1,8 +1,8 @@
 version: '3.9'
 
 networks:
-  isolation-network:
-    driver: bridge
+  node-network:
+    name: vehicles_observer
 
 services:
   nats_server:
@@ -13,7 +13,7 @@ services:
       - 6222:6222
       - 8222:8222
     networks:
-      - isolation-network
+      - node-network
 
   api:
     restart: always
@@ -34,8 +34,8 @@ services:
     ports:
       - 3001:3001
     networks:
-      - isolation-network
-    
+      - node-network
+
   loader:
     restart: always
     build:
@@ -58,7 +58,7 @@ services:
       - 3000:3000
       - 1000:1000
     networks:
-      - isolation-network
+      - node-network
 
   mongo:
     image: mongo
@@ -69,7 +69,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     networks:
-      - isolation-network
+      - node-network
 
   mongo-express:
     image: mongo-express:0.49
@@ -81,4 +81,4 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
     networks:
-      - isolation-network
+      - node-network

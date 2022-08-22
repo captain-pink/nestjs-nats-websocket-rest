@@ -3,7 +3,6 @@ import {
   WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  OnGatewayInit,
 } from '@nestjs/websockets';
 import { Server, WebSocket } from 'ws';
 
@@ -14,9 +13,7 @@ import { Server, WebSocket } from 'ws';
  * - To change ws lib to socket IO in case we need complex solution;
  */
 @WebSocketGateway(1000)
-export class WsGateway
-  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
-{
+export class WsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
