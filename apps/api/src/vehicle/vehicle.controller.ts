@@ -15,11 +15,30 @@ export class VehicleController {
 
   constructor(private readonly vehiclesDao: VehicleMessageDao) {}
 
+  /**
+   * TODO:
+   * - Wrap paging logic into decorator
+   * to use further with other requests;
+   * - Describe generic return type;
+   * @param query FindVehicleMessageDto
+   * @returns reponse with vehicles and pagination
+   */
   @Get()
-  find(@Query() query: FindVehicleMessageDto) {
-    this.logger.log(`find: ${JSON.stringify(query)}`);
+  async find(@Query() query: FindVehicleMessageDto) {
+    this.logger.log(`find:query: ${JSON.stringify(query)}`);
 
-    return this.vehiclesDao.find(query);
+    const response = {
+      data: await this.vehiclesDao.find(query),
+      paging: {
+        limit: query.limit,
+        offset: query.offset,
+        total: await this.vehiclesDao.count(),
+      },
+    };
+
+    this.logger.debug(`find:response: ${JSON.stringify(response)}`);
+
+    return response;
   }
 
   @Get('/:id')

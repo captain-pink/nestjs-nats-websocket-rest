@@ -40,6 +40,7 @@ export class VehicleMessageDao {
       return await this.vehicleMessageModel
         .find({ published: true })
         .sort(args.sort)
+        .skip(args.offset)
         .limit(args.limit);
     } catch (error) {
       const parsed = parseMongoValidationError(error);
@@ -47,6 +48,16 @@ export class VehicleMessageDao {
       this.logger.error(`find: ${JSON.stringify(parsed)}`);
 
       return new NotFoundException(parsed);
+    }
+  }
+
+  async count(): Promise<number | NotFoundException> {
+    try {
+      return await this.vehicleMessageModel.count();
+    } catch (error) {
+      this.logger.error(`count: ${JSON.stringify(error)}`);
+
+      return new NotFoundException(error.message);
     }
   }
 
