@@ -2,36 +2,20 @@ import {
   AbstractAnalyticActionPayload,
   AbstractAnalyticActionResult,
   VehicleMessage,
-  VehicleMessageDocument,
 } from '@vehicle-observer/shared';
-import { curry, map, mean, pipe, prop } from 'ramda';
+import { subtract as subtractR } from 'ramda';
 import {
+  lastAndFirstEntryField,
+  makeComputeMax,
+  makeComputeMean,
+  makeComputeMedian,
+  makeComputeMin,
+} from './helper';
+import {
+  VehicleAnalyticJsonDataFrame,
   VehicleAnalyticProcessorAction,
   VehiclesAnalyticAgregatedResult,
 } from './type';
-
-/**
- * TODO:
- * - Abstract fn should be described via generics
- */
-interface AbstractFn {
-  (...args: Array<unknown>): unknown;
-}
-
-const makeMapFieldWith = curry((fn: AbstractFn, key: string) => {
-  const mapper = map(prop(key));
-
-  return pipe(mapper, fn);
-});
-
-const makeComputeMean = makeMapFieldWith(mean);
-
-export function divideTestDigit(payload) {
-  return Promise.resolve({
-    timings: { start: 0, end: 0 },
-    data: payload.dataframe / 2,
-  });
-}
 
 /**
  * TODO:
@@ -45,23 +29,114 @@ export function divideTestDigit(payload) {
 export function average(
   action: VehicleAnalyticProcessorAction,
   field: keyof VehicleMessage,
-  payload: AbstractAnalyticActionPayload<Array<Record<string, any>>>,
+  { dataframe }: AbstractAnalyticActionPayload<Array<Record<string, any>>>,
 ): AbstractAnalyticActionResult<
   VehicleAnalyticProcessorAction,
   VehiclesAnalyticAgregatedResult
 > {
   const start = Date.now();
 
-  const computeMeanSpeed = makeComputeMean(field);
-
-  const result = computeMeanSpeed(payload.dataframe);
+  const computeMean = makeComputeMean(field);
+  const result = computeMean(dataframe);
 
   const end = Date.now();
 
   return {
     action,
     field,
-    timings: { start, end, delta: end - start },
+    timings: { start, end, delta: subtractR(end, start) },
+    result,
+  };
+}
+
+export function subtract(
+  action: VehicleAnalyticProcessorAction,
+  field: keyof VehicleMessage,
+  { dataframe }: AbstractAnalyticActionPayload<VehicleAnalyticJsonDataFrame>,
+): AbstractAnalyticActionResult<
+  VehicleAnalyticProcessorAction,
+  VehiclesAnalyticAgregatedResult
+> {
+  const start = Date.now();
+
+  const lastFirst = lastAndFirstEntryField(dataframe, field);
+  const result = subtractR(...lastFirst);
+
+  const end = Date.now();
+
+  return {
+    action,
+    field,
+    timings: { start, end, delta: subtractR(end, start) },
+    result,
+  };
+}
+
+export function median(
+  action: VehicleAnalyticProcessorAction,
+  field: keyof VehicleMessage,
+  { dataframe }: AbstractAnalyticActionPayload<Array<Record<string, any>>>,
+): AbstractAnalyticActionResult<
+  VehicleAnalyticProcessorAction,
+  VehiclesAnalyticAgregatedResult
+> {
+  const start = Date.now();
+
+  const computeMedian = makeComputeMedian(field);
+  const result = computeMedian(dataframe);
+
+  const end = Date.now();
+
+  return {
+    action,
+    field,
+    timings: { start, end, delta: subtractR(end, start) },
+    result,
+  };
+}
+
+export function max(
+  action: VehicleAnalyticProcessorAction,
+  field: keyof VehicleMessage,
+  { dataframe }: AbstractAnalyticActionPayload<Array<Record<string, any>>>,
+): AbstractAnalyticActionResult<
+  VehicleAnalyticProcessorAction,
+  VehiclesAnalyticAgregatedResult
+> {
+  const start = Date.now();
+
+  const computeMax = makeComputeMax(field);
+  const result = computeMax(dataframe);
+
+  const end = Date.now();
+
+  return {
+    action,
+    field,
+    timings: { start, end, delta: subtractR(end, start) },
+    result,
+  };
+}
+
+export function min(
+  action: VehicleAnalyticProcessorAction,
+  field: keyof VehicleMessage,
+  { dataframe }: AbstractAnalyticActionPayload<Array<Record<string, any>>>,
+): AbstractAnalyticActionResult<
+  VehicleAnalyticProcessorAction,
+  VehiclesAnalyticAgregatedResult
+> {
+  const start = Date.now();
+
+  const computeMin = makeComputeMin(field);
+  const result = computeMin(dataframe);
+
+  const end = Date.now();
+
+  return {
+    action,
+    field,
+    timings: { start, end, delta: subtractR(end, start) },
     result,
   };
 }
