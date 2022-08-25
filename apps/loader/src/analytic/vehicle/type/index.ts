@@ -1,5 +1,13 @@
+/**
+ * TODO: create generic type
+ */
 export type VehiclesAnalyticAgregatedResult = any;
-export type VehicleAnalyticProcessorAction = 'average' | 'subtract';
+export type VehicleAnalyticProcessorAction =
+  | 'average'
+  | 'subtract'
+  | 'max'
+  | 'min'
+  | 'median';
 export type VehicleAnalyticJsonDataFrame = Array<Record<string, any>>;
 /**
  * TODO:

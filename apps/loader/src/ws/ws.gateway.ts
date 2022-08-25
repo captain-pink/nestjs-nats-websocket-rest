@@ -54,7 +54,7 @@ export class WsGateway implements OnGatewayConnection, OnGatewayDisconnect {
    * @param data AnalyticClientRequestDto<VehicleAnalyticProcessorAction>
    * @returns computed value
    */
-  @SubscribeMessage('analyse')
+  @SubscribeMessage('ANALYSE')
   async handleEvent(@MessageBody() data: string): Promise<any | void> {
     const parsed = parseWsMessage(data);
     const model = plainToClass(
