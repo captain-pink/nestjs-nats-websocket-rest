@@ -7,6 +7,7 @@ import {
   HealthCheckModule,
   HealthCheckType,
 } from '@vehicle-observer/shared';
+import { VehicleAnalyticModule } from './analytic';
 
 import { LoaderModule } from './loader/loader.module';
 import { WsModule } from './ws/ws.module';
@@ -17,10 +18,11 @@ import { WsModule } from './ws/ws.module';
       type: Application.LOADER,
       env: Environment.DEV,
     }),
-    MongoModule.registerAsync({}),
+    // MongoModule.registerAsync({}),
     HealthCheckModule.forRootAsync(HealthCheckType.MICROSERVICE),
-    LoaderModule,
-    WsModule,
+    // LoaderModule,
+    // WsModule,
+    VehicleAnalyticModule,
   ],
 })
 export class AppModule {}
