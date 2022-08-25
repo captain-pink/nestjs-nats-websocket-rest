@@ -1,11 +1,19 @@
-import { Logger } from '@nestjs/common';
-import { AbstractAnalyticService } from '@vehicle-observer/shared';
-import { VehicleAnalyticProcessorAction } from './enum';
-import { VehiclesAnalyticAgregatedDataResult } from './type';
+import { Injectable, Logger } from '@nestjs/common';
+import {
+  AbstractAnalyticActionPayload,
+  AbstractAnalyticActionResult,
+  AbstractAnalyticService,
+} from '@vehicle-observer/shared';
 
+import {
+  VehicleAnalyticProcessorAction,
+  VehiclesAnalyticAgregatedResult,
+} from './type';
+
+@Injectable()
 export class VehicleAnalyticService extends AbstractAnalyticService<
   VehicleAnalyticProcessorAction,
-  VehiclesAnalyticAgregatedDataResult
+  VehiclesAnalyticAgregatedResult
 > {
   private readonly logger = new Logger(VehicleAnalyticService.name);
 
@@ -15,14 +23,10 @@ export class VehicleAnalyticService extends AbstractAnalyticService<
     this.logger.log('coonstructor: workerNodes ready');
   }
 
-  // async analyse<D>(
-  //   action: VehicleAnalyticProcessorAction,
-  //   payload: AnalyticMethodPayload<D>,
-  // ): Promise<AnalyticMethodResult<any>> {
-  //   const method = this.workerNodes.call.get(action);
-
-  //   this.logger.log(`analyse:method: ${method.name}`);
-
-  //   return method(payload);
-  // }
+  async analyse<D>(
+    action: VehicleAnalyticProcessorAction,
+    payload: AbstractAnalyticActionPayload<D>,
+  ): Promise<AbstractAnalyticActionResult<VehiclesAnalyticAgregatedResult>> {
+    return (this.workerNodes.call as any)[action](payload);
+  }
 }

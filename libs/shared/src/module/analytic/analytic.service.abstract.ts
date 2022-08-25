@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import WorkerNodes from 'worker-nodes';
+
 import {
   AbstractAnalyticActionPayload,
   AnalyticWorkerInstance,
@@ -7,9 +8,9 @@ import {
 } from './type';
 
 @Injectable()
-export abstract class AbstractAnalyticService<A, R> {
+export abstract class AbstractAnalyticService<A extends string, R> {
   private readonly abstractLogger = new Logger(AbstractAnalyticService.name);
-  private readonly workerNodes: AnalyticWorkerInstance<A, R>;
+  protected readonly workerNodes: AnalyticWorkerInstance<A, R>;
 
   constructor(path: string, options: Options) {
     this.workerNodes = new WorkerNodes(
@@ -24,16 +25,8 @@ export abstract class AbstractAnalyticService<A, R> {
     );
   }
 
-  async analyse<D>(
+  abstract analyse<D>(
     action: A,
     payload: AbstractAnalyticActionPayload<D>,
-  ): Promise<AbstractAnalyticActionResult<R>> {
-    const processor = (this.workerNodes.call as any)();
-    console.log('processor', await processor);
-    const method = processor.get(action);
-
-    this.abstractLogger.log(`analyse:method: ${method.name}`);
-
-    return method(payload);
-  }
+  ): Promise<AbstractAnalyticActionResult<R>>;
 }

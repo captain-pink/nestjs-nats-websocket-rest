@@ -4,7 +4,6 @@ export type Timeframe = {
 };
 
 export type AbstractAnalyticActionPayload<D> = {
-  timeframe: Timeframe;
   dataframe: D;
 };
 
@@ -19,9 +18,11 @@ export interface AbstractAnalyticMethod<R> {
   >;
 }
 
-export type AbstractAnalyticProcessor<A, R> = Map<A, AbstractAnalyticMethod<R>>;
+export type AbstractAnalyticProcessor<A extends string, R> = {
+  [key in A]: AbstractAnalyticMethod<R>;
+};
 
-export interface AnalyticWorkerInstance<A, R>
+export interface AnalyticWorkerInstance<A extends string, R>
   extends Omit<WorkerNodesInstance, 'call'> {
   call: AbstractAnalyticProcessor<A, R>;
 }

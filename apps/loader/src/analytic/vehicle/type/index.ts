@@ -1,1 +1,2 @@
-export type VehiclesAnalyticAgregatedDataResult = any;
+export type VehiclesAnalyticAgregatedResult = any;
+export type VehicleAnalyticProcessorAction = 'findAvgSpeed';

@@ -1,4 +1,4 @@
-import { join, resolve } from 'path';
+import { join } from 'path';
 import { isNil } from 'ramda';
 
 import { Application, Environment } from '../enum';
@@ -18,8 +18,11 @@ export function chooseEnvPath(type: Application, env: Environment): string {
   const application = Application[type].toLowerCase();
   const environment = Environment[env].toLowerCase();
 
-  const projectPath = resolve(__dirname);
-  const relatedEnvPath = `/../../../.env/.${environment}.${application}`;
+  const splittedDirname = __dirname.split('/');
+  const distEntryIdx = splittedDirname.findIndex(
+    (entry: string) => entry === 'dist',
+  );
+  const repoPath = splittedDirname.slice(0, distEntryIdx).join('/');
 
-  return join(projectPath, relatedEnvPath);
+  return join(repoPath, `/.env/.${environment}.${application}`);
 }

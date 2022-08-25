@@ -18,11 +18,11 @@ import { WsModule } from './ws/ws.module';
       type: Application.LOADER,
       env: Environment.DEV,
     }),
-    // MongoModule.registerAsync({}),
+    MongoModule.registerAsync({}),
     HealthCheckModule.forRootAsync(HealthCheckType.MICROSERVICE),
-    // LoaderModule,
-    // WsModule,
+    LoaderModule,
     VehicleAnalyticModule,
+    WsModule,
   ],
 })
 export class AppModule {}
