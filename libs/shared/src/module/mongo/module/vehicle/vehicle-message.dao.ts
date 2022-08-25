@@ -81,8 +81,29 @@ export class VehicleMessageDao {
       return new NotFoundException(parsed);
     }
   }
-}
 
+  async findByPeriod(
+    start: number,
+    end: number,
+  ): Promise<NotFoundException | Array<VehicleMessage>> {
+    try {
+      return await this.vehicleMessageModel
+        .find({
+          time: {
+            $gte: new Date(start),
+            $lt: new Date(end),
+          },
+        })
+        .lean();
+    } catch (error) {
+      const parsed = parseMongoValidationError(error);
+
+      this.logger.error(`find: ${JSON.stringify(parsed)}`);
+
+      return new NotFoundException(parsed);
+    }
+  }
+}
 /**
  * TODO:
  * - To add proper type for error

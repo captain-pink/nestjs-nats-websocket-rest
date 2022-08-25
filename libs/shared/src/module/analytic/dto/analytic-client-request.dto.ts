@@ -7,6 +7,9 @@ export class AnalyticClientRequestDto<A> {
   @IsString()
   action: A;
 
+  @IsString()
+  field: A;
+
   @Type(() => TimeframeDto)
   timeframe: Timeframe;
 }

@@ -27,6 +27,7 @@ export abstract class AbstractAnalyticService<A extends string, R> {
 
   abstract analyse<D>(
     action: A,
+    field: string,
     payload: AbstractAnalyticActionPayload<D>,
-  ): Promise<AbstractAnalyticActionResult<R>>;
+  ): Promise<AbstractAnalyticActionResult<A, R>>;
 }

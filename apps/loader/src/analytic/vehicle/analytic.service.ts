@@ -3,6 +3,7 @@ import {
   AbstractAnalyticActionPayload,
   AbstractAnalyticActionResult,
   AbstractAnalyticService,
+  VehicleMessage,
 } from '@vehicle-observer/shared';
 
 import {
@@ -25,8 +26,14 @@ export class VehicleAnalyticService extends AbstractAnalyticService<
 
   async analyse<D>(
     action: VehicleAnalyticProcessorAction,
+    field: keyof VehicleMessage,
     payload: AbstractAnalyticActionPayload<D>,
-  ): Promise<AbstractAnalyticActionResult<VehiclesAnalyticAgregatedResult>> {
-    return (this.workerNodes.call as any)[action](payload);
+  ): Promise<
+    AbstractAnalyticActionResult<
+      VehicleAnalyticProcessorAction,
+      VehiclesAnalyticAgregatedResult
+    >
+  > {
+    return (this.workerNodes.call as any)[action](action, field, payload);
   }
 }

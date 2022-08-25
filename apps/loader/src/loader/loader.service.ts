@@ -1,11 +1,13 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import {
   FailedMessage,
   VehicleMessage,
   VehicleMessageDao,
 } from '@vehicle-observer/shared';
 import { VehicleMessageDto, FailedMessageDao } from '@vehicle-observer/shared';
+import { TimeframeDto } from '@vehicle-observer/shared/module/analytic/dto/timeframe.dto';
 import { validateOrReject, ValidationError } from 'class-validator';
+
 import { Subject } from '../ws/enum';
 
 @Injectable({})
@@ -46,5 +48,12 @@ export class LoaderService {
    */
   async reportFailedMessage(message: ValidationError) {
     return this.failedDao.save(message);
+  }
+
+  async loadDataFrame({
+    start,
+    end,
+  }: TimeframeDto): Promise<NotFoundException | Array<VehicleMessage>> {
+    return this.vehicleDao.findByPeriod(start, end);
   }
 }

@@ -10,6 +10,7 @@ import {
 import {
   AbstractAnalyticService,
   AnalyticClientRequestDto,
+  Timeframe,
 } from '@vehicle-observer/shared';
 import { validateOrReject } from 'class-validator';
 import { Socket, Server } from 'socket.io';
@@ -18,6 +19,7 @@ import {
   VehicleAnalyticProcessorAction,
   VehiclesAnalyticAgregatedResult,
 } from '../analytic/vehicle/type';
+import { LoaderService } from '../loader/loader.service';
 
 /**
  * Class describes WsGateway logic
@@ -37,6 +39,7 @@ export class WsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       VehicleAnalyticProcessorAction,
       VehiclesAnalyticAgregatedResult
     >,
+    private readonly loaderService: LoaderService,
   ) {}
 
   publish(subject: string, payload: unknown) {
@@ -45,6 +48,12 @@ export class WsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     });
   }
 
+  /**
+   * TODO:
+   * - write pipe to transform incoming body to class
+   * @param data AnalyticClientRequestDto<VehicleAnalyticProcessorAction>
+   * @returns computed value
+   */
   @SubscribeMessage('analyse')
   async handleEvent(@MessageBody() data: string): Promise<any | void> {
     const parsed = parseWsMessage(data);
@@ -55,8 +64,8 @@ export class WsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     await validateOrReject(model);
 
-    return this.analyticService.analyse<any>(model.action, {
-      dataframe: 10,
+    return this.analyticService.analyse<any>(model.action, model.field, {
+      dataframe: await this.loaderService.loadDataFrame(model.timeframe),
     });
   }
 
@@ -79,7 +88,14 @@ export class WsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 function parseWsMessage(message: string) {
   try {
-    return JSON.parse(message);
+    const json = JSON.parse(message) as {
+      command: string;
+      timeframe: Timeframe;
+    };
+    const { command, timeframe } = json;
+    const [action, field] = command.split('.');
+
+    return { action: action, field, timeframe };
   } catch {
     return message;
   }

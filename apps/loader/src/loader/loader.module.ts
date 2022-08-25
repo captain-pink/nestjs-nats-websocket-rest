@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import {
   FailedMessageModule,
   VehicleMessageModule,
@@ -9,7 +9,11 @@ import { LoaderController } from './loader.controller';
 import { LoaderService } from './loader.service';
 
 @Module({
-  imports: [VehicleMessageModule, FailedMessageModule, WsModule],
+  imports: [
+    VehicleMessageModule,
+    FailedMessageModule,
+    forwardRef(() => WsModule),
+  ],
   controllers: [LoaderController],
   providers: [LoaderService],
   exports: [LoaderService],
