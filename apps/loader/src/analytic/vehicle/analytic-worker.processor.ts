@@ -18,6 +18,10 @@ import {
 } from './type';
 
 /**
+ *
+ * Example event to be used by client:
+ * { "command": "average.speed", "timeframe": { "start": 1511436343000, "end": 1511436447000 }}
+ *
  * TODO:
  * - To improve performance metric approach.
  * Performance std lib to use.
