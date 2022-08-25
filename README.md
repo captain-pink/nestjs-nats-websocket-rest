@@ -2,11 +2,10 @@
 
 ## Change log version 0.0.1 -> 0.1.0
 
-- Generic analytic module introduces -> libs/shared/src/module/analytic
-Analytic library uses WorkerNodes library under the hood to introduct the concept of WorkerPool. As Node is single threaded and high performing for io/crud operations, heavy computations (with huge dataframes) can load event loop and clients may see significant increase of latency. Of course, module is still very basic and should be improved (as mostly everything in the project).
+- Generic analytic module introduced -> <b>libs/shared/src/module/analytic</b>. Analytic module uses WorkerNodes library under the hood to introduce concept of the WorkerPool. As Node is single threaded and aimed for frequent "light" io/crud operations, heavy computations (with huge dataframes) can load event loop and clients may see significant increase of latency. Of course, module is still very basic and should be improved (as mostly everything in the project). I suggest using something more appropriate for the case like Python pandas or Rust Polars.
 
-- Vehicles analytic module introduced -> apps/loader/src/analytic/vehicle
-Vechiles analytic module extends generic analytic module. To process analytic reports, it uses inherited workerNodes instance. To handle logic it demands processor which is places here (apps/loader/src/analytic/vehicle/analytic-worker.processor.ts). Any processor's method accept 3 parameters:
+- Vehicles analytic module introduced -> <b>apps/loader/src/analytic/vehicle</b>.
+Vechiles analytic module inherit generic analytic module. To process analytic reports, it uses workerNodes instance. To handle logic it demands processor which is places here (apps/loader/src/analytic/vehicle/analytic-worker.processor.ts). Any processor's method accept 3 parameters:
 
 ```
   action: VehicleAnalyticProcessorAction (processor method)
@@ -27,9 +26,15 @@ After calculations returns:
 - Ws lib was changed to Socket.io to add simplified event support.
 Please refer <b>Websocket API</b> for how to (was updated).
 
+- TS configuration was change to use workers with nestjs.
+
+- Updated env.example files.
+
+- Small fixes across different modules applied.
+
 ## Description
 
-Current repository shows how technical task "ViriCiti Nodejs Assignment" can be solved in elegant and extensible way using Node and NestJs framework. Monorepo concept applied as well to prevent of using different node_modules folders and to simplify project building process.
+Current repository shows how technical task "ViriCiti Nodejs Assignment" can be solved in elegant and extensible way using Node and NestJS framework. Monorepo concept applied as well to prevent of using different node_modules folders and to simplify project building process.
 
 ## Stack
 
@@ -43,11 +48,11 @@ Current repository shows how technical task "ViriCiti Nodejs Assignment" can be 
 
 ## Structure
 
-Project consist of 2 apps and 1 library.
+Project consist of 2 apps and 1 library (and separate repository with telegram bot).
 
 ### Library
 
-- modules (config, mongo, health-check) - all modules are built to use across monorepo.
+- modules (config, mongo, health-check, analytic) - all modules are built to use across monorepo.
 - util - solves some atomic issues
 
 ### Apps

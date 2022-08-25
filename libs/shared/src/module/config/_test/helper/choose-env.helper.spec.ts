@@ -5,7 +5,7 @@ describe('chooseEnvPath', () => {
   it('should successfully construct path', () => {
     const path = chooseEnvPath(Application.API, Environment.DEV);
 
-    expect(path.includes('/libs/shared/src/.env/.dev.api')).toBeTruthy();
+    expect(path.includes('.env/.dev.api')).toBeTruthy();
   });
 
   it('should fail if no params passed', () => {

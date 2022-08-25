@@ -1,6 +1,9 @@
+import { NotFoundException } from '@nestjs/common';
 import { VehicleMessage } from '@vehicle-observer/shared';
 
-export const findResponseLimitOne: Array<VehicleMessage> = [
+import { FindVehiclesReturn } from '../../type';
+
+export const findResponseLimitOne: VehicleMessage[] | NotFoundException = [
   {
     primaryChannel: 'vehicle',
     uniqueChannel: 'test-bus-1',
@@ -13,7 +16,7 @@ export const findResponseLimitOne: Array<VehicleMessage> = [
   },
 ];
 
-export const findResponseLimitSeveral: Array<VehicleMessage> = [
+export const findResponseLimitSeveral: VehicleMessage[] | NotFoundException = [
   {
     primaryChannel: 'vehicle',
     uniqueChannel: 'test-bus-1',
@@ -64,3 +67,5 @@ export const findResponseValidationFailed = {
   message: 'Not Found Exception',
   name: 'NotFoundException',
 };
+
+export const findPaging = { limit: 1, offset: 0, total: 0 };

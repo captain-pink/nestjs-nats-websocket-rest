@@ -15,13 +15,14 @@ import { VehicleController } from '../vehicle.controller';
 import { VehicleModule } from '../vehicle.module';
 
 import {
+  findPaging,
   findResponseLimitOne,
   findResponseLimitSeveral,
   findResponseValidationFailed,
 } from './_mocks/find-response.mocks';
 import { findByIdResponse } from './_mocks/find-by-id-response.mock';
 
-describe('CatsController', () => {
+describe('VehicleController', () => {
   let controller: VehicleController;
   let dao: VehicleMessageDao;
 
@@ -62,7 +63,10 @@ describe('CatsController', () => {
       const findArgs = plainToClass(FindVehicleMessageDto, { limit: 1 });
       const result = await controller.find(findArgs);
 
-      expect(result).toBe(findResponseLimitOne);
+      expect(result).toEqual({
+        data: findResponseLimitOne,
+        paging: findPaging,
+      });
     });
 
     it('should request 20 vehicles because no limit was passed', async () => {
@@ -75,11 +79,15 @@ describe('CatsController', () => {
 
       expect(findArgs).toEqual({
         limit: 20,
+        offset: 0,
         sort: {
           date: -1,
         },
       });
-      expect(result).toBe(findResponseLimitSeveral);
+      expect(result).toEqual({
+        data: findResponseLimitSeveral,
+        paging: { ...findPaging, limit: 20 },
+      });
     });
 
     it('should fail if wrong parameters were passed', async () => {
@@ -96,7 +104,14 @@ describe('CatsController', () => {
         limit: 'string',
       } as unknown as FindVehicleMessageDto);
 
-      expect(result).toBe(findResponseValidationFailed);
+      expect(result).toEqual({
+        data: findResponseValidationFailed,
+        paging: {
+          limit: 'string',
+          offset: undefined,
+          total: 0,
+        },
+      });
     });
   });
 
@@ -110,7 +125,7 @@ describe('CatsController', () => {
 
       const result = await controller.findById(new FindVehicleByIdDto());
 
-      expect(result).toBe(findResponseValidationFailed);
+      expect(result).toEqual(findResponseValidationFailed);
     });
 
     it('should return one message by id', async () => {
@@ -123,7 +138,7 @@ describe('CatsController', () => {
       });
       const result = await controller.findById(findArgs);
 
-      expect(result).toBe(findByIdResponse);
+      expect(result).toEqual(findByIdResponse);
     });
   });
 });
